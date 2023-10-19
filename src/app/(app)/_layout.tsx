@@ -6,6 +6,7 @@ import { useAuthQuery } from "../auth/authApiSlice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { usePathname } from "expo-router";
+import { Icon } from "react-native-paper";
 
 export default function AppLayout() {
   //const { data: fetchData, isLoading } = useAuthQuery();
@@ -28,7 +29,7 @@ export default function AppLayout() {
   }
   */
 
-  if (!user) {
+  if (user) {
     return <Redirect href="/connect" />;
   }
 
@@ -39,30 +40,29 @@ export default function AppLayout() {
       </View>
       <View className="flex-row justify-around p-4 bg-white-300">
         <Link href="/offers">
-          <FontAwesomeIcon
-            icon={faHome}
+          <Icon
+            source="ab-testing"
             size={24}
             color={pathname === "/offers" ? "rgb(37 99 235)" : "gray"}
           />
         </Link>
         <Link href="/messages">
-          <FontAwesomeIcon
-            icon={faEnvelope}
+          <Icon
+            source="ab-testing"
             size={24}
             color={pathname === "/messages" ? "rgb(37 99 235)" : "gray"}
           />
         </Link>
         <Link href="/add">
-          <FontAwesomeIcon
-            icon={faAdd}
+          <Icon
+            source="ab-testing"
             size={24}
             color={pathname === "/add" ? "rgb(37 99 235)" : "gray"}
           />
         </Link>
-        <NotificationBadge pathname={pathname} />
         <Link href="/profile">
-          <FontAwesomeIcon
-            icon={faUser}
+          <Icon
+            source="ab-testing"
             size={24}
             color={pathname === "/profile" ? "rgb(37 99 235)" : "gray"}
           />
