@@ -9,13 +9,12 @@ import { usePathname } from "expo-router";
 import { Icon } from "react-native-paper";
 
 export default function AppLayout() {
-  //const { data: fetchData, isLoading } = useAuthQuery();
+  const { data: fetchData, isLoading } = useAuthQuery();
 
   const user: User | null = useSelector(selectCurrentUser);
 
   const pathname = usePathname();
 
-  /*
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -27,9 +26,8 @@ export default function AppLayout() {
   if (isLoading) {
     return <Text>Loading layout...</Text>;
   }
-  */
 
-  if (user) {
+  if (!user) {
     return <Redirect href="/connect" />;
   }
 
@@ -39,34 +37,43 @@ export default function AppLayout() {
         <Slot />
       </View>
       <View className="flex-row justify-around p-4 bg-white-300">
-        <Link href="/offers">
+        <Link href="/home">
           <Icon
-            source="ab-testing"
+            source="home-circle"
             size={24}
-            color={pathname === "/offers" ? "rgb(37 99 235)" : "gray"}
+            color={pathname === "/home" ? "rgb(37 99 235)" : "gray"}
           />
         </Link>
-        <Link href="/messages">
+        <Link href="/articles">
           <Icon
-            source="ab-testing"
+            source="food"
             size={24}
-            color={pathname === "/messages" ? "rgb(37 99 235)" : "gray"}
+            color={pathname === "/articles" ? "rgb(37 99 235)" : "gray"}
           />
         </Link>
-        <Link href="/add">
+        <Link href="/commander">
           <Icon
-            source="ab-testing"
+            source="swap-vertical"
             size={24}
-            color={pathname === "/add" ? "rgb(37 99 235)" : "gray"}
+            color={pathname === "/commander" ? "rgb(37 99 235)" : "gray"}
           />
         </Link>
-        <Link href="/profile">
+        <Link href="/leaderboard">
           <Icon
-            source="ab-testing"
+            source="podium"
             size={24}
-            color={pathname === "/profile" ? "rgb(37 99 235)" : "gray"}
+            color={pathname === "/leaderboard" ? "rgb(37 99 235)" : "gray"}
           />
         </Link>
+        {user?.role && user.role === "admin" && (
+          <Link href="/paiements">
+            <Icon
+              source="account-credit-card"
+              size={24}
+              color={pathname === "/paiements" ? "rgb(37 99 235)" : "gray"}
+            />
+          </Link>
+        )}
       </View>
     </View>
   );

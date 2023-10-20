@@ -2,48 +2,25 @@ import { apiSlice } from "../api/apiSlice";
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder: any) => ({
-    login: builder.mutation({
-      query: (credentials: { user: User; token: string }) => ({
-        url: "/user/connect",
-        method: "POST",
-        body: { ...credentials },
-      }),
-    }),
     auth: builder.query({
       query: () => "/user/auth",
     }),
-    getUrl: builder.query({
-      query: () => "/user/url",
-    }),
-    getAccessToken: builder.mutation({
-      query: (code: string) => ({
-        url: "/user/dataverse",
+    login: builder.mutation({
+      query: ({ mail, password }: { mail: string; password: string }) => ({
+        url: "/user/connect",
         method: "POST",
-        body: { code },
-      }),
-    }),
-    log: builder.mutation({
-      query: (accessToken: string) => ({
-        url: "/user/login",
-        method: "POST",
-        body: { accessToken },
+        body: { mail, password },
       }),
     }),
     addNewUser: builder.mutation({
-      query: (registeringUser: Registering) => ({
+      query: (user: User) => ({
         url: "/user",
         method: "POST",
-        body: { ...registeringUser },
+        body: { ...user },
       }),
     }),
   }),
 });
 
-export const {
-  useLoginMutation,
-  useAuthQuery,
-  useGetUrlQuery,
-  useGetAccessTokenMutation,
-  useLogMutation,
-  useAddNewUserMutation,
-} = authApiSlice;
+export const { useLoginMutation, useAuthQuery, useAddNewUserMutation } =
+  authApiSlice;
