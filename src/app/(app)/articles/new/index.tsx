@@ -1,7 +1,7 @@
-import { Paragraph, Snackbar, TextInput } from "react-native-paper";
+import { Snackbar, TextInput, Button } from "react-native-paper";
 import { useAddNewArticleMutation } from "../articlesApiSlice";
 import { useState } from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View } from "react-native";
 
 export default function NewArticle() {
   const [addNewArticle, { isLoading }] = useAddNewArticleMutation();
@@ -46,15 +46,15 @@ export default function NewArticle() {
         onChangeText={setImage}
         className="bg-white border rounded-md px-4 py-2 mb-4 w-80"
       />
-      <TouchableOpacity
+      <Button
+        loading={isLoading}
+        className="my-4 w-40"
+        mode="contained"
         onPress={handleAddNewArticle}
         disabled={!canSave}
-        className={`${
-          canSave ? "bg-blue-500" : "bg-gray-400"
-        } py-3 px-6 rounded-lg mt-4`}
       >
-        <Paragraph>Ajouter</Paragraph>
-      </TouchableOpacity>
+        Ajouter
+      </Button>
       <Snackbar
         visible={snackbar !== null}
         onDismiss={() => setSnackbar(null)}

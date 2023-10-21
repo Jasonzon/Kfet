@@ -1,8 +1,8 @@
 import { Link, router } from "expo-router";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text } from "react-native";
 import { useAddNewUserMutation } from "../auth/authApiSlice";
 import { useState } from "react";
-import { Paragraph, Snackbar, TextInput } from "react-native-paper";
+import { Snackbar, TextInput, Button } from "react-native-paper";
 import { useDispatch } from "react-redux";
 import { setToken } from "../../utils/token";
 import { setUser } from "../auth/authSlice";
@@ -77,15 +77,15 @@ export default function Register() {
         className="bg-white border rounded-md px-4 py-2 mb-4 w-80"
         secureTextEntry
       />
-      <TouchableOpacity
+      <Button
+        loading={isLoading}
+        className="my-4 w-40"
+        mode="contained"
         onPress={handleAddNewUser}
         disabled={!canSave}
-        className={`${
-          canSave ? "bg-blue-500" : "bg-gray-400"
-        } py-3 px-6 rounded-lg my-4`}
       >
-        <Paragraph>Enregistrement</Paragraph>
-      </TouchableOpacity>
+        Enregistrement
+      </Button>
       <Snackbar
         visible={snackbar !== null}
         onDismiss={() => setSnackbar(null)}

@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { View, Text, Button, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { useLoginMutation } from "../auth/authApiSlice";
 import { useDispatch } from "react-redux";
 import { setUser } from "../auth/authSlice";
 import { Link, router } from "expo-router";
 import { setToken } from "../../utils/token";
-import { Paragraph, Snackbar, TextInput } from "react-native-paper";
+import { Paragraph, Snackbar, TextInput, Button } from "react-native-paper";
 
 export default function Connect() {
   const [mail, setMail] = useState<string>("");
@@ -49,15 +49,15 @@ export default function Connect() {
         secureTextEntry
         className="bg-white border rounded-md px-4 py-2 mb-4 w-80"
       />
-      <TouchableOpacity
+      <Button
+        loading={isLoading}
+        className="my-4 w-40"
+        mode="contained"
         onPress={onLogin}
         disabled={!canSave}
-        className={`${
-          canSave ? "bg-blue-500" : "bg-gray-400"
-        } py-3 px-6 rounded-lg my-4`}
       >
-        <Paragraph>Connexion</Paragraph>
-      </TouchableOpacity>
+        Connexion
+      </Button>
       <Snackbar
         visible={snackbar !== null}
         onDismiss={() => setSnackbar(null)}
