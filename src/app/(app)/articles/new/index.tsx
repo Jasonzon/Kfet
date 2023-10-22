@@ -27,7 +27,7 @@ export default function NewArticle() {
   const canSave = [nom, prix, image].every(Boolean) && !isLoading;
 
   return (
-    <View className="p-4">
+    <View className="p-4 mt-8 flex-1 items-center justify-center">
       <TextInput
         placeholder="Nom"
         value={nom}

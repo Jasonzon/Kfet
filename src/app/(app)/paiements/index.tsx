@@ -1,10 +1,7 @@
 import { useSelector } from "react-redux";
-import {
-  selectAllPaiements,
-  useGetPaiementsQuery,
-} from "../commander/paiementsApiSlice";
+import { selectAllPaiements, useGetPaiementsQuery } from "./paiementsApiSlice";
 import { RootState } from "../../store";
-import { Paragraph, Title, Card } from "react-native-paper";
+import { Paragraph, Title, Card, ActivityIndicator } from "react-native-paper";
 import { View, FlatList } from "react-native";
 
 export default function Paiements() {
@@ -15,12 +12,16 @@ export default function Paiements() {
   );
 
   if (isLoading) {
-    return <Paragraph>Chargement des paiements...</Paragraph>;
+    return (
+      <View className="flex-1 items-center justify-center ">
+        <ActivityIndicator />
+      </View>
+    );
   }
 
   return (
-    <View className="flex-1 p-4">
-      <Title className="text-3xl mb-4">Tous les articles</Title>
+    <View className="flex-1 items-center justify-center p-4 mt-4">
+      <Title className="text-3xl mb-4">Paiements</Title>
       <FlatList
         data={paiements}
         keyExtractor={(item: Paiement) => item.id as string}

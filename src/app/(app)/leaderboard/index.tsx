@@ -4,7 +4,7 @@ import {
   selectAllTotalPaiements,
   useGetTotalPaiementsQuery,
 } from "./leaderboardApiSlice";
-import { Paragraph, Card, Title } from "react-native-paper";
+import { Paragraph, Card, Title, ActivityIndicator } from "react-native-paper";
 import { View, FlatList } from "react-native";
 
 export default function Leaderboard() {
@@ -15,7 +15,11 @@ export default function Leaderboard() {
   );
 
   if (isLoading) {
-    return <Paragraph>Chargement du leaderboard...</Paragraph>;
+    return (
+      <View className="flex-1 items-center justify-center ">
+        <ActivityIndicator />
+      </View>
+    );
   }
 
   return (
