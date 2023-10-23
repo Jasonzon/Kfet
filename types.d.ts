@@ -18,7 +18,7 @@ type Article = {
 
 type Paiement = {
   id?: string;
-  user: User;
+  user: string;
   vendeur: string | null;
   articles: string[];
   montant: number;
@@ -26,14 +26,34 @@ type Paiement = {
   validation: string;
 };
 
+type PaiementJoined = Paiement & {
+  role: "basic" | "admin";
+  nom: string;
+  prenom: string;
+  tel: string;
+  mail: string;
+  password: string;
+  tampons: string;
+};
+
 type Presence = {
   id?: string;
-  user: User;
+  user: string;
   debut: string;
   fin: string | null;
 };
 
+type PresenceJoined = Presence & {
+  role: "basic" | "admin";
+  nom: string;
+  prenom: string;
+  tel: string;
+  mail: string;
+  password: string;
+  tampons: string;
+};
+
 type TotalPaiement = {
-  user: User;
+  user: string;
   montant: number;
 };

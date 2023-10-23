@@ -3,7 +3,7 @@ import { apiSlice } from "../../api/apiSlice";
 import { RootState } from "../../store";
 
 export const PaiementsAdapter = createEntityAdapter({
-  selectId: (instance: Paiement) => instance.id as string,
+  selectId: (instance: PaiementJoined) => instance.id as string,
   sortComparer: false,
 });
 

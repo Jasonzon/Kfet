@@ -3,8 +3,8 @@ import { apiSlice } from "../../api/apiSlice";
 import { RootState } from "../../store";
 
 export const TotalPaiementsAdapter = createEntityAdapter({
-  selectId: (instance: TotalPaiements) => instance.user.id as string,
-  sortComparer: false,
+  selectId: (instance: TotalPaiement) => instance.user as string,
+  sortComparer: (a: TotalPaiement, b: TotalPaiement) => a.montant - b.montant,
 });
 
 export const initialState = TotalPaiementsAdapter.getInitialState();

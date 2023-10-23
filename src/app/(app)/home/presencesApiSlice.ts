@@ -3,7 +3,7 @@ import { apiSlice } from "../../api/apiSlice";
 import { RootState } from "../../store";
 
 export const PresencesAdapter = createEntityAdapter({
-  selectId: (instance: Presence) => instance.id as string,
+  selectId: (instance: PresenceJoined) => instance.id as string,
   sortComparer: false,
 });
 
@@ -32,11 +32,12 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: [{ type: "Presence", id: "LIST" }],
     }),
     updatePresence: builder.mutation({
-      query: (initialPresence: Presence) => ({
-        url: `/presence/${initialPresence.id}`,
+      query: ({ fin, id }: { fin: Date; id: string }) => ({
+        url: `/presence/${id}`,
         method: "PUT",
         body: {
-          ...initialPresence,
+          fin,
+          id,
         },
       }),
       invalidatesTags: (result: any, error: any, arg: any) => [

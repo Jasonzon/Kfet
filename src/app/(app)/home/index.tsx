@@ -24,7 +24,7 @@ import { useState } from "react";
 export default function Home() {
   const { isLoading } = useGetPresencesQuery();
 
-  const presences: Presence[] = useSelector((state: RootState) =>
+  const presences: PresenceJoined[] = useSelector((state: RootState) =>
     selectAllPresences(state)
   );
 
@@ -50,7 +50,11 @@ export default function Home() {
 
   async function handleUpdatePresence() {
     try {
-      await updatePresence({ fin: new Date() }).unwrap();
+      await updatePresence({
+        fin: new Date(),
+        id: presences.find((presence: Presence) => presence.user === user!.id)
+          ?.id,
+      }).unwrap();
       setSnackbar("Présence mise à jour !");
     } catch (error: any) {
       console.error("Erreur", error.message);
@@ -78,12 +82,17 @@ export default function Home() {
       {presences.length === 0 ? (
         <Title className="text-3xl mb-4">La Kfet est fermée 😢</Title>
       ) : (
-        <Title className="text-3xl mb-4">La Kfet est ouverte 🔥🔥🔥</Title>
+        <View className="flex-1 items-center justify-center">
+          <Title className="text-3xl">La Kfet est ouverte 🔥</Title>
+          <Paragraph className="text-lg">
+            Membres de la team présents :
+          </Paragraph>
+        </View>
       )}
       {user?.role === "admin" && (
         <>
           {!presences.some(
-            (presence: Presence) => presence.user.id === user.id
+            (presence: Presence) => presence.user === user.id
           ) ? (
             <Button
               loading={isLoadingPresence}
@@ -108,11 +117,14 @@ export default function Home() {
       {presences.length !== 0 && (
         <FlatList
           data={presences}
-          keyExtractor={(item: Presence) => item.id as string}
+          className="w-full"
+          keyExtractor={(item: PresenceJoined) => item.id as string}
           renderItem={({ item }) => (
-            <Card className="my-4">
+            <Card className="w-full">
               <Card.Content>
-                <Title className="text-xl mb-2">{item.user.prenom}</Title>
+                <Title className="text-xl mb-1">
+                  {item.prenom} {item.nom}
+                </Title>
                 <Paragraph className="text-gray-500 mb-2">
                   {new Intl.DateTimeFormat("fr-FR", {
                     day: "2-digit",

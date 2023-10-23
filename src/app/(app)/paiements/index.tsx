@@ -11,7 +11,7 @@ import { useState } from "react";
 export default function Paiements() {
   const { isLoading } = useGetPaiementsQuery();
 
-  const paiements: Paiement[] = useSelector((state: RootState) =>
+  const paiements: PaiementJoined[] = useSelector((state: RootState) =>
     selectAllPaiements(state)
   );
 
@@ -52,15 +52,16 @@ export default function Paiements() {
         </Select>
       )}
       <FlatList
+        className="w-full mt-2"
         data={
           payments === "soi"
             ? paiements.filter(
-                (paiement: Paiement) => user && paiement.user.id === user.id
+                (paiement: PaiementJoined) => user && paiement.user === user.id
               )
             : paiements
         }
-        keyExtractor={(item: Paiement) => item.id as string}
-        renderItem={({ item }) => <Paiement item={item} />}
+        keyExtractor={(item: PaiementJoined) => item.id as string}
+        renderItem={({ item, index }) => <Paiement item={item} />}
       />
     </View>
   );

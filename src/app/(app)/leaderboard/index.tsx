@@ -24,18 +24,20 @@ export default function Leaderboard() {
 
   return (
     <View className="flex-1 items-center justify-center p-4 mt-4">
-      <Title className="text-3xl mb-4">Leaderboard</Title>
+      <Title className="text-3xl mb-4">Leaderboard 🏆</Title>
       <FlatList
+        className="w-full"
         data={paiements}
-        keyExtractor={(item: TotalPaiement) => item.user.id as string}
-        renderItem={({ item }) => (
-          <Card className="my-4">
+        keyExtractor={(item: TotalPaiement) => item.user as string}
+        renderItem={({ item, index }) => (
+          <Card className="w-full">
             <Card.Content>
-              <Title className="text-xl mb-2">{`${
-                item.user.prenom
-              } ${item.user.nom.slice(0, 1)}.`}</Title>
-              <Paragraph className="text-gray-500 mb-2">
-                {item.montant}
+              <View className="flex flex-row justify-between">
+                <Title className="text-xl mb-2">{item.user}</Title>
+                <Title className="text-3xl">N°{index + 1}</Title>
+              </View>
+              <Paragraph className="text-gray-500 mb-2 text-xl">
+                {item.montant}€
               </Paragraph>
             </Card.Content>
           </Card>
