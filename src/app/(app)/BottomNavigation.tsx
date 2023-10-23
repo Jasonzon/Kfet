@@ -5,7 +5,7 @@ import { View } from "react-native";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../auth/authSlice";
 
-export default function Router() {
+export default function BottomNavigation() {
   const user: User | null = useSelector(selectCurrentUser);
 
   const pathname = usePathname();
@@ -37,15 +37,13 @@ export default function Router() {
             color={pathname === "/leaderboard" ? "rgb(37 99 235)" : "gray"}
           />
         </Link>
-        {user?.role && user.role === "admin" && (
-          <Link href="/paiements">
-            <Icon
-              source="cash-check"
-              size={24}
-              color={pathname === "/paiements" ? "rgb(37 99 235)" : "gray"}
-            />
-          </Link>
-        )}
+        <Link href="/paiements">
+          <Icon
+            source="cash-check"
+            size={24}
+            color={pathname === "/paiements" ? "rgb(37 99 235)" : "gray"}
+          />
+        </Link>
         {user?.role && user.role === "admin" && (
           <Link href="/users">
             <Icon

@@ -1,6 +1,6 @@
 type User = {
   role: "basic" | "admin";
-  id: string;
+  id?: string;
   nom: string;
   prenom: string;
   tel: string;
@@ -10,14 +10,14 @@ type User = {
 };
 
 type Article = {
-  id: string;
+  id?: string;
   nom: string;
-  prix: string;
+  prix: number;
   image: string;
 };
 
 type Paiement = {
-  id: string;
+  id?: string;
   user: User;
   vendeur: string | null;
   articles: string[];
@@ -27,7 +27,7 @@ type Paiement = {
 };
 
 type Presence = {
-  id: string;
+  id?: string;
   user: User;
   debut: string;
   fin: string | null;

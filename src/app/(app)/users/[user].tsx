@@ -33,7 +33,11 @@ export default function UserPage() {
   }
 
   if (!user) {
-    return <Text>Erreur, utilisateur non trouvé</Text>;
+    return (
+      <View className="flex-1 items-center justify-center">
+        <Paragraph>Erreur, utilisateur non trouvé</Paragraph>
+      </View>
+    );
   }
 
   return (

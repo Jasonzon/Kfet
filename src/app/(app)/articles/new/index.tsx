@@ -1,23 +1,25 @@
-import { Snackbar, TextInput, Button } from "react-native-paper";
+import { Snackbar, Button } from "react-native-paper";
 import { useAddNewArticleMutation } from "../articlesApiSlice";
 import { useState } from "react";
 import { View } from "react-native";
+import ArticleForm from "../ArticleForm";
+import { useDispatch, useSelector } from "react-redux";
+import { removeArticle, selectArticle } from "../articleFormSlice";
 
 export default function NewArticle() {
   const [addNewArticle, { isLoading }] = useAddNewArticleMutation();
 
-  const [nom, setNom] = useState<string>("");
-  const [prix, setPrix] = useState<string>("");
-  const [image, setImage] = useState<string>("");
   const [snackbar, setSnackbar] = useState<string | null>(null);
+
+  const dispatch = useDispatch();
+
+  const { nom, prix, image } = useSelector(selectArticle);
 
   async function handleAddNewArticle() {
     try {
       await addNewArticle({ nom, prix, image } as Article).unwrap();
       setSnackbar("Article ajouté !");
-      setNom("");
-      setPrix("");
-      setImage("");
+      dispatch(removeArticle(undefined));
     } catch (error: any) {
       console.error("Erreur lors de l'ajout de l'article :", error);
       setSnackbar("Erreur, article non ajouté");
@@ -28,24 +30,7 @@ export default function NewArticle() {
 
   return (
     <View className="p-4 mt-8 flex-1 items-center justify-center">
-      <TextInput
-        placeholder="Nom"
-        value={nom}
-        onChangeText={setNom}
-        className="bg-white border rounded-md px-4 py-2 mb-4 w-80"
-      />
-      <TextInput
-        placeholder="Prix"
-        value={prix}
-        onChangeText={setPrix}
-        className="bg-white border rounded-md px-4 py-2 mb-4 w-80"
-      />
-      <TextInput
-        placeholder="URL de l'image"
-        value={image}
-        onChangeText={setImage}
-        className="bg-white border rounded-md px-4 py-2 mb-4 w-80"
-      />
+      <ArticleForm />
       <Button
         loading={isLoading}
         className="my-4 w-40"

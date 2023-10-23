@@ -7,9 +7,11 @@ import {
   Paragraph,
   useTheme,
   ActivityIndicator,
+  TextInput,
 } from "react-native-paper";
 import { selectCurrentUser } from "../../auth/authSlice";
 import { router } from "expo-router";
+import { useState } from "react";
 
 export default function Admin() {
   const { isLoading } = useGetUsersQuery();
@@ -22,6 +24,8 @@ export default function Admin() {
 
   const theme = useTheme();
 
+  const [search, setSearch] = useState<string>("");
+
   if (isLoading) {
     return (
       <View className="flex-1 items-center justify-center ">
@@ -33,8 +37,17 @@ export default function Admin() {
   return (
     <View className="flex-1 items-center justify-center p-4 mt-4">
       <Title className="text-3xl mb-2">Tous les utilisateurs</Title>
+      <TextInput
+        value={search}
+        onChangeText={setSearch}
+        placeholder="Rechercher"
+        className="bg-white border rounded-md px-4 py-2 mb-4 w-80"
+      />
       <FlatList
-        data={users}
+        data={users.filter(
+          (user: User) =>
+            user.nom.includes(search) || user.prenom.includes(search)
+        )}
         numColumns={2}
         keyExtractor={(item: User) => item.id as string}
         renderItem={({ item }) => (

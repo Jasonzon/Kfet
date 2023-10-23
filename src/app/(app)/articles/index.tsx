@@ -1,16 +1,23 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectAllArticles, useGetArticlesQuery } from "./articlesApiSlice";
 import { RootState } from "../../store";
-import { FlatList, View, TouchableOpacity, Image } from "react-native";
+import { FlatList, View } from "react-native";
 import {
-  Card,
   Title,
-  Paragraph,
   Button,
   ActivityIndicator,
+  Paragraph,
+  useTheme,
+  TextInput,
+  Snackbar,
 } from "react-native-paper";
 import { selectCurrentUser } from "../../auth/authSlice";
 import { router } from "expo-router";
+import Article from "./Article";
+import { removeCart, selectList, selectTotal } from "./cartSlice";
+import { useState } from "react";
+import { useAddNewPaiementMutation } from "../paiements/paiementsApiSlice";
+import { removeArticle } from "./articleFormSlice";
 
 export default function Articles() {
   const { isLoading } = useGetArticlesQuery();
@@ -20,6 +27,39 @@ export default function Articles() {
   const articles: Article[] = useSelector((state: RootState) =>
     selectAllArticles(state)
   );
+
+  const cartList = useSelector(selectList);
+
+  const montant = useSelector(selectTotal);
+
+  const total = useSelector(selectTotal);
+
+  const theme = useTheme();
+
+  const [search, setSearch] = useState<string>("");
+
+  const [snackbar, setSnackbar] = useState<string | null>(null);
+
+  const [addNewPaiement, { isLoading: isLoadingPaiement }] =
+    useAddNewPaiementMutation();
+
+  async function handleAddPaiement() {
+    try {
+      await addNewPaiement({
+        articles: cartList as string[],
+        montant,
+        envoi: new Date(),
+      }).unwrap();
+      setSnackbar("Commande créée avec succès !");
+      dispatch(removeCart(undefined));
+      router.push("/paiements");
+    } catch (error: any) {
+      console.error("Erreur, commande non créée");
+      setSnackbar("Erreur, commande non créée");
+    }
+  }
+
+  const dispatch = useDispatch();
 
   if (isLoading) {
     return (
@@ -37,29 +77,51 @@ export default function Articles() {
           loading={isLoading}
           className="w-40 mb-2"
           mode="contained"
-          onPress={() => router.push("/articles/new")}
+          onPress={() => {
+            dispatch(removeArticle(undefined));
+            router.push("/articles/new");
+          }}
         >
           Ajouter un article
         </Button>
       )}
+      <TextInput
+        value={search}
+        onChangeText={setSearch}
+        placeholder="Rechercher"
+        className="bg-white border rounded-md px-4 py-2 mb-4 w-80"
+      />
       <FlatList
-        data={articles}
+        data={articles.filter((article: Article) =>
+          article.nom.includes(search)
+        )}
         numColumns={2}
         keyExtractor={(item: Article) => item.id as string}
-        renderItem={({ item }) => (
-          <Card className="m-2 w-40">
-            <Card.Content>
-              <Title className="text-xl mb-1">{item.nom}</Title>
-              <Paragraph className="text-gray-500 mb-1">{item.prix}€</Paragraph>
-            </Card.Content>
-            <Image
-              source={{ uri: item.image }}
-              style={{ width: 100, height: 100, resizeMode: "cover" }}
-              className="m-1"
-            />
-          </Card>
-        )}
+        renderItem={({ item }) => <Article item={item} />}
       />
+      <View className="absolute bottom-4 p-2 flex flex-row gap-2">
+        <Paragraph
+          className="p-2 rounded-md"
+          style={{ backgroundColor: theme.colors.inversePrimary }}
+        >
+          Total: {total}€
+        </Paragraph>
+        <Button
+          loading={isLoadingPaiement}
+          mode="contained"
+          onPress={handleAddPaiement}
+          disabled={montant === 0}
+        >
+          Commander
+        </Button>
+      </View>
+      <Snackbar
+        visible={snackbar !== null}
+        onDismiss={() => setSnackbar(null)}
+        duration={2000}
+      >
+        {snackbar}
+      </Snackbar>
     </View>
   );
 }

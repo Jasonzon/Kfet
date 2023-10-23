@@ -5,7 +5,7 @@ import { View } from "react-native";
 import { useAuthQuery } from "../auth/authApiSlice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import Router from "./Router";
+import BottomNavigation from "./BottomNavigation";
 import { ActivityIndicator } from "react-native-paper";
 
 export default function AppLayout() {
@@ -18,7 +18,7 @@ export default function AppLayout() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (fetchData) {
+    if (fetchData && !user) {
       dispatch(setUser(fetchData));
     }
   }, [fetchData]);
@@ -35,5 +35,5 @@ export default function AppLayout() {
     return <Redirect href="/connect" />;
   }
 
-  return <Router />;
+  return <BottomNavigation />;
 }
