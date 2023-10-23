@@ -17,7 +17,11 @@ export default function NewArticle() {
 
   async function handleAddNewArticle() {
     try {
-      await addNewArticle({ nom, prix, image } as Article).unwrap();
+      await addNewArticle({
+        nom,
+        prix: parseFloat(prix),
+        image,
+      } as Article).unwrap();
       setSnackbar("Article ajouté !");
       dispatch(removeArticle(undefined));
     } catch (error: any) {
@@ -26,7 +30,10 @@ export default function NewArticle() {
     }
   }
 
-  const canSave = [nom, prix, image].every(Boolean) && !isLoading;
+  const canSave =
+    [nom, prix, image].every(Boolean) &&
+    !isLoading &&
+    /^\d+(\.\d+)?$/.test(prix);
 
   return (
     <View className="p-4 mt-8 flex-1 items-center justify-center">

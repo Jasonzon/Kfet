@@ -11,8 +11,6 @@ import { ActivityIndicator } from "react-native-paper";
 export default function AppLayout() {
   const { data: fetchData, isLoading } = useAuthQuery();
 
-  console.log("data", fetchData);
-
   const user: User | null = useSelector(selectCurrentUser);
 
   const dispatch = useDispatch();

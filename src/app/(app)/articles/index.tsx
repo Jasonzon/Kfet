@@ -48,7 +48,6 @@ export default function Articles() {
       await addNewPaiement({
         articles: cartList as string[],
         montant,
-        envoi: new Date(),
       }).unwrap();
       setSnackbar("Commande créée avec succès !");
       dispatch(removeCart(undefined));
@@ -100,11 +99,17 @@ export default function Articles() {
         renderItem={({ item }) => <Article item={item} />}
       />
       <View className="absolute bottom-4 p-2 flex flex-row gap-2">
+        <Button
+          mode="contained"
+          onPress={() => dispatch(removeCart(undefined))}
+        >
+          Réinitialiser
+        </Button>
         <Paragraph
           className="p-2 rounded-md"
           style={{ backgroundColor: theme.colors.inversePrimary }}
         >
-          Total: {total}€
+          Total: {total.toFixed(2)}€
         </Paragraph>
         <Button
           loading={isLoadingPaiement}

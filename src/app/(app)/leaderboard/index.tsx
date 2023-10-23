@@ -23,7 +23,7 @@ export default function Leaderboard() {
   }
 
   return (
-    <View className="flex-1 p-4">
+    <View className="flex-1 items-center justify-center p-4 mt-4">
       <Title className="text-3xl mb-4">Leaderboard</Title>
       <FlatList
         data={paiements}

@@ -13,6 +13,14 @@ export async function setToken(token: string) {
   try {
     await AsyncStorage.setItem("token", token);
   } catch (err: any) {
-    console.error(err.message);
+    console.error("Erreur", err.message);
+  }
+}
+
+export async function removeToken() {
+  try {
+    await AsyncStorage.removeItem("token");
+  } catch (err: any) {
+    console.error("Erreur", err.message);
   }
 }

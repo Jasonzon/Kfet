@@ -1,14 +1,21 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 
+interface AddArticle {
+  id?: string;
+  nom: string;
+  prix: string;
+  image: string;
+}
+
 interface ArticleFormState {
-  article: Article;
+  article: AddArticle;
 }
 
 const initialState: ArticleFormState = {
   article: {
     id: undefined,
-    prix: 0,
+    prix: "",
     nom: "",
     image: "",
   },
@@ -20,10 +27,10 @@ const articleFormSlice = createSlice({
   reducers: {
     updatePrix: (
       state: ArticleFormState,
-      action: PayloadAction<{ prix: number }>
+      action: PayloadAction<{ prix: string }>
     ) => {
       const { prix } = action.payload;
-      if (prix) {
+      if (typeof prix === "string") {
         state.article.prix = prix;
       }
     },
@@ -57,14 +64,14 @@ const articleFormSlice = createSlice({
     removeArticle: (state: ArticleFormState, _) => {
       state.article = {
         id: undefined,
-        prix: 0,
+        prix: "",
         nom: "",
         image: "",
       };
     },
     setArticle: (
       state: ArticleFormState,
-      action: PayloadAction<{ article: Article }>
+      action: PayloadAction<{ article: AddArticle }>
     ) => {
       const { article } = action.payload;
       if (article) {

@@ -30,7 +30,11 @@ export default function UserPage() {
 
   async function handleUpdateArticle() {
     try {
-      await updateArticle({ nom, prix, image } as Article).unwrap();
+      await updateArticle({
+        nom,
+        prix: parseFloat(prix),
+        image,
+      } as Article).unwrap();
       setSnackbar("Article ajouté !");
       dispatch(removeArticle(undefined));
       router.push("/articles");
@@ -40,7 +44,10 @@ export default function UserPage() {
     }
   }
 
-  const canSave = [id, prix, image, nom].every(Boolean) && !isLoading;
+  const canSave =
+    [id, prix, image, nom].every(Boolean) &&
+    !isLoading &&
+    /^\d+(\.\d+)?$/.test(prix);
 
   if (!article) {
     return (

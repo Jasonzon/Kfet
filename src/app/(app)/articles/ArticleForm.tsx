@@ -1,4 +1,4 @@
-import { TextInput } from "react-native-paper";
+import { Text, TextInput } from "react-native-paper";
 import { View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -24,8 +24,8 @@ export default function ArticleForm() {
       <TextInput
         placeholder="Prix"
         keyboardType="numeric"
-        value={prix?.toString()}
-        onChangeText={(text) => dispatch(updatePrix({ prix: Number(text) }))}
+        value={prix}
+        onChangeText={(text) => dispatch(updatePrix({ prix: text }))}
         className="bg-white border rounded-md px-4 py-2 mb-4 w-80"
       />
       <TextInput

@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { selectAllPaiements, useGetPaiementsQuery } from "./paiementsApiSlice";
 import { RootState } from "../../store";
-import { Title, ActivityIndicator } from "react-native-paper";
+import { Title, ActivityIndicator, useTheme } from "react-native-paper";
 import { View, FlatList } from "react-native";
 import { selectCurrentUser } from "../../auth/authSlice";
 import Paiement from "./Paiement";
@@ -16,6 +16,8 @@ export default function Paiements() {
   );
 
   const user: User | null = useSelector(selectCurrentUser);
+
+  const theme = useTheme();
 
   const [payments, setPayments] = useState<"soi" | "tous">("soi");
 
@@ -37,8 +39,8 @@ export default function Paiements() {
           accessibilityLabel="De qui voir les paiements ?"
           placeholder="De qui voir les paiements ?"
           _selectedItem={{
-            bg: "teal.600",
-            endIcon: <CheckIcon size="5" />,
+            bg: theme.colors.inversePrimary,
+            endIcon: <CheckIcon size={7} />,
           }}
           mt={1}
           onValueChange={(itemValue: string) =>
