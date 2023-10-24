@@ -17,6 +17,7 @@ import {
 } from "./paiementsApiSlice";
 import { useState } from "react";
 import { selectCurrentUser } from "../../auth/authSlice";
+import { router } from "expo-router";
 
 interface PaiementInfosProps {
   paiement: Paiement;
@@ -24,6 +25,11 @@ interface PaiementInfosProps {
 
 export default function PaiementInfos({ paiement }: PaiementInfosProps) {
   const [snackbar, setSnackbar] = useState<string | null>(null);
+
+  const currentUser: User | null = useSelector(selectCurrentUser) as User;
+
+  const [dialogDelete, setDialogDelete] = useState<boolean>(false);
+  const [dialogUpdate, setDialogUpdate] = useState<boolean>(false);
 
   const [updatePaiement, { isLoading: isLoadingUpdate }] =
     useUpdatePaiementMutation();
@@ -35,9 +41,12 @@ export default function PaiementInfos({ paiement }: PaiementInfosProps) {
     try {
       await updatePaiement({ id: paiement.id }).unwrap();
       setSnackbar("Paiement validé !");
+      router.push("/paiements");
     } catch (error: any) {
       console.error("Erreur, paiement non validé");
       setSnackbar("Erreur, paiement non validé");
+    } finally {
+      setDialogUpdate(false);
     }
   }
 
@@ -45,9 +54,12 @@ export default function PaiementInfos({ paiement }: PaiementInfosProps) {
     try {
       await deletePaiement({ paiementId: paiement.id }).unwrap();
       setSnackbar("Commande supprimée !");
+      router.push("/paiements");
     } catch (error: any) {
       console.error("Erreur, commande non supprimée");
       setSnackbar("Erreur, commande non supprimée");
+    } finally {
+      setDialogDelete(false);
     }
   }
 
@@ -55,13 +67,8 @@ export default function PaiementInfos({ paiement }: PaiementInfosProps) {
     selectUserById(state, paiement?.user)
   ) as User;
 
-  const currentUser: User | null = useSelector(selectCurrentUser) as User;
-
-  const [dialogDelete, setDialogDelete] = useState<boolean>(false);
-  const [dialogUpdate, setDialogUpdate] = useState<boolean>(false);
-
   return (
-    <View className="flex-1 items-center justify-center p-4 mt-4">
+    <View className="flex-1 items-center justify-center p-4 mt-40">
       <Paragraph className="text-3xl font-bold mb-2">
         {user.prenom} {user.nom}
       </Paragraph>
@@ -74,37 +81,55 @@ export default function PaiementInfos({ paiement }: PaiementInfosProps) {
         keyExtractor={(item: string, index: number) => index.toString()}
         renderItem={({ item }) => <Article item={item} />}
       />
-      <Paragraph className="text-xl my-2">
-        {new Intl.DateTimeFormat("fr-FR", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        }).format(new Date(paiement.envoi))}
-      </Paragraph>
-      <View className="flex flex-row gap-2">
-        {currentUser.id === user.id && (
-          <Button
-            loading={isLoadingDelete}
-            className="my-4 w-40"
-            mode="contained"
-            onPress={() => setDialogDelete(true)}
-          >
-            Supprimer
-          </Button>
-        )}
-        {currentUser.role === "admin" && (
-          <Button
-            loading={isLoadingUpdate}
-            className="my-4 w-40"
-            mode="contained"
-            onPress={() => setDialogUpdate(true)}
-          >
-            Valider
-          </Button>
+      <View className="flex flex-column items-center justify-evenly">
+        <Paragraph className="text-xl">
+          Envoyé : {"  "}
+          {new Intl.DateTimeFormat("fr-FR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          }).format(new Date(paiement.envoi))}
+        </Paragraph>
+        {paiement.validation && (
+          <Paragraph className="text-xl">
+            Validé : {"  "}
+            {new Intl.DateTimeFormat("fr-FR", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            }).format(new Date(paiement.validation))}
+          </Paragraph>
         )}
       </View>
+      {!paiement.validation && (
+        <View className="flex flex-row gap-2">
+          {currentUser.id === user.id && (
+            <Button
+              loading={isLoadingDelete}
+              className="my-4 w-40"
+              mode="contained"
+              onPress={() => setDialogDelete(true)}
+            >
+              Supprimer
+            </Button>
+          )}
+          {currentUser.role === "admin" && (
+            <Button
+              loading={isLoadingUpdate}
+              className="my-4 w-40"
+              mode="contained"
+              onPress={() => setDialogUpdate(true)}
+            >
+              Valider
+            </Button>
+          )}
+        </View>
+      )}
+
       <Portal>
         <Dialog visible={dialogDelete} onDismiss={() => setDialogDelete(false)}>
           <Dialog.Title>Suppression</Dialog.Title>

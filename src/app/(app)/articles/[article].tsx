@@ -21,6 +21,7 @@ import {
 import { useState } from "react";
 import { removeArticle, selectArticle } from "./articleFormSlice";
 import ArticleForm from "./ArticleForm";
+import { selectCurrentUser } from "../../auth/authSlice";
 
 export default function UserPage() {
   const { article: articleId } = useLocalSearchParams() as {
@@ -45,6 +46,8 @@ export default function UserPage() {
   const dispatch = useDispatch();
 
   const [dialog, setDialog] = useState<boolean>(false);
+
+  const user: User | null = useSelector(selectCurrentUser) as User;
 
   async function handleUpdateArticle() {
     try {
@@ -98,26 +101,30 @@ export default function UserPage() {
         <Paragraph className="text-xl">{prix}€</Paragraph>
         <Image source={{ uri: image }} className="w-48 h-48" />
       </View>
-      <ArticleForm />
-      <View className="flex flex-row gap-2">
-        <Button
-          loading={isLoadingDelete}
-          className="my-4 w-40"
-          mode="contained"
-          onPress={() => setDialog(true)}
-        >
-          Supprimer
-        </Button>
-        <Button
-          loading={isLoading}
-          className="my-4 w-40"
-          mode="contained"
-          onPress={handleUpdateArticle}
-          disabled={!canSave}
-        >
-          Mettre à jour
-        </Button>
-      </View>
+      {user.role === "admin" && (
+        <>
+          <ArticleForm />
+          <View className="flex flex-row gap-2">
+            <Button
+              loading={isLoadingDelete}
+              className="my-4 w-40"
+              mode="contained"
+              onPress={() => setDialog(true)}
+            >
+              Supprimer
+            </Button>
+            <Button
+              loading={isLoading}
+              className="my-4 w-40"
+              mode="contained"
+              onPress={handleUpdateArticle}
+              disabled={!canSave}
+            >
+              Mettre à jour
+            </Button>
+          </View>
+        </>
+      )}
       <Snackbar
         visible={snackbar !== null}
         onDismiss={() => setSnackbar(null)}

@@ -32,11 +32,10 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: [{ type: "Presence", id: "LIST" }],
     }),
     updatePresence: builder.mutation({
-      query: ({ fin, id }: { fin: Date; id: string }) => ({
+      query: ({ id }: { id: string }) => ({
         url: `/presence/${id}`,
         method: "PUT",
         body: {
-          fin,
           id,
         },
       }),

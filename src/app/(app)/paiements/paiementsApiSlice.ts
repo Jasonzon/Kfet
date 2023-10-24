@@ -51,6 +51,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (result: any, error: any, arg: any) => [
         { type: "Paiement", id: arg.id },
+        { type: "TotalPaiement", id: "LIST" },
       ],
     }),
     deletePaiement: builder.mutation({

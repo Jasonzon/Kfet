@@ -14,7 +14,7 @@ import {
 import { selectCurrentUser } from "../../auth/authSlice";
 import { router } from "expo-router";
 import Article from "./Article";
-import { removeCart, selectList, selectTotal } from "./cartSlice";
+import { removeCart, selectCart } from "./cartSlice";
 import { useState } from "react";
 import { useAddNewPaiementMutation } from "../paiements/paiementsApiSlice";
 import { removeArticle } from "./articleFormSlice";
@@ -28,11 +28,11 @@ export default function Articles() {
     selectAllArticles(state)
   );
 
-  const cartList = useSelector(selectList);
+  const cart = useSelector(selectCart);
 
-  const montant = useSelector(selectTotal);
+  const cartList = cart.map((article: Article) => article.id);
 
-  const total = useSelector(selectTotal);
+  const montant = cart.reduce((acc, article) => acc + article.prix, 0);
 
   const theme = useTheme();
 
@@ -74,7 +74,7 @@ export default function Articles() {
       {user?.role === "admin" && (
         <Button
           loading={isLoading}
-          className="w-40 mb-2"
+          className="w-40 mb-4"
           mode="contained"
           onPress={() => {
             dispatch(removeArticle(undefined));
@@ -109,7 +109,7 @@ export default function Articles() {
           className="p-2 rounded-md"
           style={{ backgroundColor: theme.colors.inversePrimary }}
         >
-          Total: {total.toFixed(2)}€
+          Total: {montant.toFixed(2)}€
         </Paragraph>
         <Button
           loading={isLoadingPaiement}

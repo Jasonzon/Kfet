@@ -42,11 +42,4 @@ export const { addToCart, removeFromCart, removeCart } = cartSlice.actions;
 
 export default cartSlice.reducer;
 
-export const selectArticleNumber = (state: RootState, articleId: string) =>
-  state.cart.cart.filter((article: Article) => article.id === articleId).length;
-
-export const selectTotal = (state: RootState) =>
-  state.cart.cart.reduce((acc, article) => acc + article.prix, 0);
-
-export const selectList = (state: RootState) =>
-  state.cart.cart.map((article: Article) => article.id);
+export const selectCart = (state: RootState) => state.cart.cart;

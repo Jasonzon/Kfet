@@ -52,7 +52,6 @@ export default function Home() {
   async function handleUpdatePresence() {
     try {
       await updatePresence({
-        fin: new Date(),
         id: presences.find((presence: Presence) => presence.user === user!.id)
           ?.id,
       }).unwrap();

@@ -1,5 +1,12 @@
 import { usePathname } from "expo-router";
-import { Button, Dialog, Icon, Portal, Text } from "react-native-paper";
+import {
+  Button,
+  Dialog,
+  Icon,
+  Portal,
+  Text,
+  useTheme,
+} from "react-native-paper";
 import { Link, Slot } from "expo-router";
 import { TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,51 +23,61 @@ export default function BottomNavigation() {
 
   const dispatch = useDispatch();
 
+  const theme = useTheme();
+
   return (
     <View className="flex-1">
       <View className="flex-1">
         <Slot />
       </View>
-      <View className="flex-row justify-around p-4 bg-white-300">
+      <View
+        className="flex-row justify-around p-4 bg-white-300"
+        style={{ backgroundColor: theme.colors.inversePrimary }}
+      >
         <Link href="/home">
           <Icon
             source="home-circle"
-            size={24}
-            color={pathname === "/home" ? "rgb(37 99 235)" : "gray"}
+            size={30}
+            color={pathname === "/home" ? theme.colors.backdrop : "white"}
           />
         </Link>
         <Link href="/articles">
           <Icon
             source="food"
-            size={24}
-            color={pathname === "/articles" ? "rgb(37 99 235)" : "gray"}
+            size={30}
+            color={pathname === "/articles" ? theme.colors.backdrop : "white"}
           />
         </Link>
         <Link href="/leaderboard">
           <Icon
             source="podium"
-            size={24}
-            color={pathname === "/leaderboard" ? "rgb(37 99 235)" : "gray"}
+            size={30}
+            color={
+              pathname === "/leaderboard" ? theme.colors.backdrop : "white"
+            }
           />
         </Link>
         <Link href="/paiements">
           <Icon
             source="cash-check"
-            size={24}
-            color={pathname === "/paiements" ? "rgb(37 99 235)" : "gray"}
+            size={30}
+            color={pathname === "/paiements" ? theme.colors.backdrop : "white"}
           />
         </Link>
         {user?.role && user.role === "admin" && (
           <Link href="/users">
             <Icon
               source="account-group"
-              size={24}
-              color={pathname === "/users" ? "rgb(37 99 235)" : "gray"}
+              size={30}
+              color={pathname === "/users" ? theme.colors.backdrop : "white"}
             />
           </Link>
         )}
-        <TouchableOpacity onPress={() => setDialog(true)}>
-          <Icon source="logout" size={24} color="rgb(239 68 68)" />
+        <TouchableOpacity
+          onPress={() => setDialog(true)}
+          className="translate-y-0.5"
+        >
+          <Icon source="logout" size={26} color="white" />
         </TouchableOpacity>
         <Portal>
           <Dialog visible={dialog} onDismiss={() => setDialog(false)}>
