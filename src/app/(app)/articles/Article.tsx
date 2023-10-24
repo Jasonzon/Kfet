@@ -23,7 +23,9 @@ export default function Article({ item }: ArticleProps) {
     <Card
       className="m-2 w-40"
       onPress={() => {
-        dispatch(setArticle({ article: item }));
+        dispatch(
+          setArticle({ article: { ...item, prix: item.prix.toString() } })
+        );
         router.push(`/articles/${item.id}`);
       }}
     >

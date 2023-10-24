@@ -14,7 +14,7 @@ import { router } from "expo-router";
 import { useState } from "react";
 
 export default function Admin() {
-  const { isLoading } = useGetUsersQuery();
+  const { isLoading: isLoadingUsers } = useGetUsersQuery();
 
   const user: User | null = useSelector(selectCurrentUser);
 
@@ -26,7 +26,7 @@ export default function Admin() {
 
   const [search, setSearch] = useState<string>("");
 
-  if (isLoading) {
+  if (isLoadingUsers) {
     return (
       <View className="flex-1 items-center justify-center ">
         <ActivityIndicator />
@@ -41,18 +41,19 @@ export default function Admin() {
         value={search}
         onChangeText={setSearch}
         placeholder="Rechercher"
-        className="bg-white border rounded-md px-4 py-2 mb-4 w-80"
+        className="bg-white border rounded-md px-4 py-2 mb-2 w-80"
       />
       <FlatList
         data={users.filter(
           (user: User) =>
-            user.nom.includes(search) || user.prenom.includes(search)
+            user.nom.toLowerCase().includes(search.toLowerCase()) ||
+            user.prenom.toLowerCase().includes(search.toLowerCase())
         )}
         numColumns={2}
         keyExtractor={(item: User) => item.id as string}
         renderItem={({ item }) => (
           <TouchableOpacity
-            className="w-full m-2 p-2 rounded-lg"
+            className="w-full p-2 rounded-lg"
             style={{
               backgroundColor:
                 user?.id !== item.id
@@ -61,10 +62,10 @@ export default function Admin() {
             }}
             onPress={() => router.push(`/users/${item.id}`)}
           >
-            <Title className="text-xl mb-1">{`${
+            <Title className="text-xl">{`${
               item.prenom
             } ${item.nom[0].toUpperCase()}.`}</Title>
-            <Paragraph className="text-gray-500 mb-1">{item.tel}</Paragraph>
+            <Paragraph className="text-gray-500">{item.tel}</Paragraph>
           </TouchableOpacity>
         )}
       />

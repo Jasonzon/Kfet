@@ -1,9 +1,18 @@
 import { useLocalSearchParams } from "expo-router";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
-import { selectUserById, useUpdateUserMutation } from "./usersApiSlice";
-import { View, Text } from "react-native";
-import { Paragraph, Button, Snackbar } from "react-native-paper";
+import {
+  selectUserById,
+  useGetUsersQuery,
+  useUpdateUserMutation,
+} from "./usersApiSlice";
+import { View } from "react-native";
+import {
+  Paragraph,
+  Button,
+  Snackbar,
+  ActivityIndicator,
+} from "react-native-paper";
 import { useState } from "react";
 import { selectCurrentUser } from "../../auth/authSlice";
 
@@ -12,9 +21,11 @@ export default function UserPage() {
     user: string;
   };
 
+  const { isLoading: isLoadingUsers } = useGetUsersQuery();
+
   const [snackbar, setSnackbar] = useState<string | null>(null);
 
-  const [updateUser, { isLoading }] = useUpdateUserMutation();
+  const [updateUser, { isLoading: isLoadingUpdate }] = useUpdateUserMutation();
 
   const currentUser: User | null = useSelector(selectCurrentUser);
 
@@ -30,6 +41,14 @@ export default function UserPage() {
       console.error("Erreur, utilisateur non mis à jour");
       setSnackbar("Erreur, utilisateur non mis à jour");
     }
+  }
+
+  if (isLoadingUsers) {
+    return (
+      <View className="flex-1 items-center justify-center ">
+        <ActivityIndicator />
+      </View>
+    );
   }
 
   if (!user) {
@@ -50,7 +69,7 @@ export default function UserPage() {
         <>
           {user.role === "admin" ? (
             <Button
-              loading={isLoading}
+              loading={isLoadingUpdate}
               className="mb-2"
               mode="contained"
               onPress={() => handleUpdateUser("basic")}
@@ -59,7 +78,7 @@ export default function UserPage() {
             </Button>
           ) : (
             <Button
-              loading={isLoading}
+              loading={isLoadingUpdate}
               className="mb-2"
               mode="contained"
               onPress={() => handleUpdateUser("admin")}

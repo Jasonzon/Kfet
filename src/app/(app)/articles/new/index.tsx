@@ -1,4 +1,4 @@
-import { Snackbar, Button } from "react-native-paper";
+import { Snackbar, Button, Title } from "react-native-paper";
 import { useAddNewArticleMutation } from "../articlesApiSlice";
 import { useState } from "react";
 import { View } from "react-native";
@@ -37,6 +37,7 @@ export default function NewArticle() {
 
   return (
     <View className="p-4 mt-8 flex-1 items-center justify-center">
+      <Title className="text-3xl">Nouvel article</Title>
       <ArticleForm />
       <Button
         loading={isLoading}

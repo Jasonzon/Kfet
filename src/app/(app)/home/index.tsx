@@ -20,11 +20,12 @@ import {
 } from "react-native-paper";
 import { selectCurrentUser } from "../../auth/authSlice";
 import { useState } from "react";
+import Presence from "./Presence";
 
 export default function Home() {
   const { isLoading } = useGetPresencesQuery();
 
-  const presences: PresenceJoined[] = useSelector((state: RootState) =>
+  const presences: Presence[] = useSelector((state: RootState) =>
     selectAllPresences(state)
   );
 
@@ -118,25 +119,8 @@ export default function Home() {
         <FlatList
           data={presences}
           className="w-full"
-          keyExtractor={(item: PresenceJoined) => item.id as string}
-          renderItem={({ item }) => (
-            <Card className="w-full">
-              <Card.Content>
-                <Title className="text-xl mb-1">
-                  {item.prenom} {item.nom}
-                </Title>
-                <Paragraph className="text-gray-500 mb-2">
-                  {new Intl.DateTimeFormat("fr-FR", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }).format(new Date(item.debut))}
-                </Paragraph>
-              </Card.Content>
-            </Card>
-          )}
+          keyExtractor={(item: Presence) => item.id as string}
+          renderItem={({ item }) => <Presence item={item} />}
         />
       )}
       <Portal>

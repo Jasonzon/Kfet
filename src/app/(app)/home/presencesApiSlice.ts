@@ -3,7 +3,7 @@ import { apiSlice } from "../../api/apiSlice";
 import { RootState } from "../../store";
 
 export const PresencesAdapter = createEntityAdapter({
-  selectId: (instance: PresenceJoined) => instance.id as string,
+  selectId: (instance: Presence) => instance.id as string,
   sortComparer: false,
 });
 

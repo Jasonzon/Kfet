@@ -26,16 +26,6 @@ type Paiement = {
   validation: string;
 };
 
-type PaiementJoined = Paiement & {
-  role: "basic" | "admin";
-  nom: string;
-  prenom: string;
-  tel: string;
-  mail: string;
-  password: string;
-  tampons: string;
-};
-
 type Presence = {
   id?: string;
   user: string;
@@ -43,17 +33,7 @@ type Presence = {
   fin: string | null;
 };
 
-type PresenceJoined = Presence & {
-  role: "basic" | "admin";
-  nom: string;
-  prenom: string;
-  tel: string;
-  mail: string;
-  password: string;
-  tampons: string;
-};
-
 type TotalPaiement = {
   user: string;
-  montant: number;
+  total: number;
 };

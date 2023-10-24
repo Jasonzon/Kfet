@@ -4,7 +4,7 @@ import { RootState } from "../../store";
 
 export const TotalPaiementsAdapter = createEntityAdapter({
   selectId: (instance: TotalPaiement) => instance.user as string,
-  sortComparer: (a: TotalPaiement, b: TotalPaiement) => a.montant - b.montant,
+  sortComparer: (a: TotalPaiement, b: TotalPaiement) => a.total - b.total,
 });
 
 export const initialState = TotalPaiementsAdapter.getInitialState();

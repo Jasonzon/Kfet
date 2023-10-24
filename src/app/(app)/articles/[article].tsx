@@ -2,11 +2,22 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import {
+  selectAllArticles,
   selectArticleById,
+  useDeleteArticleMutation,
+  useGetArticlesQuery,
   useUpdateArticleMutation,
 } from "./articlesApiSlice";
-import { View } from "react-native";
-import { Paragraph, Button, Snackbar } from "react-native-paper";
+import { View, Image } from "react-native";
+import {
+  Paragraph,
+  Button,
+  Snackbar,
+  Title,
+  Portal,
+  Dialog,
+  Text,
+} from "react-native-paper";
 import { useState } from "react";
 import { removeArticle, selectArticle } from "./articleFormSlice";
 import ArticleForm from "./ArticleForm";
@@ -16,6 +27,8 @@ export default function UserPage() {
     article: string;
   };
 
+  const { isLoading: isLoadingArticles } = useGetArticlesQuery();
+
   const [snackbar, setSnackbar] = useState<string | null>(null);
 
   const article: Article | undefined = useSelector((state: RootState) =>
@@ -24,9 +37,14 @@ export default function UserPage() {
 
   const [updateArticle, { isLoading }] = useUpdateArticleMutation();
 
+  const [deleteArticle, { isLoading: isLoadingDelete }] =
+    useDeleteArticleMutation();
+
   const { id, nom, prix, image } = useSelector(selectArticle);
 
   const dispatch = useDispatch();
+
+  const [dialog, setDialog] = useState<boolean>(false);
 
   async function handleUpdateArticle() {
     try {
@@ -34,6 +52,7 @@ export default function UserPage() {
         nom,
         prix: parseFloat(prix),
         image,
+        id,
       } as Article).unwrap();
       setSnackbar("Article ajouté !");
       dispatch(removeArticle(undefined));
@@ -41,6 +60,21 @@ export default function UserPage() {
     } catch (error: any) {
       console.error("Erreur lors de l'ajout de l'article :", error);
       setSnackbar("Erreur, article non ajouté");
+    }
+  }
+
+  async function handleDeleteArticle() {
+    try {
+      await deleteArticle({
+        articleId: id,
+      }).unwrap();
+      setSnackbar("Article supprimé !");
+      router.push("/articles");
+    } catch (error: any) {
+      console.error("Erreur, article non supprimé");
+      setSnackbar("Erreur, article non supprimé");
+    } finally {
+      setDialog(false);
     }
   }
 
@@ -59,16 +93,31 @@ export default function UserPage() {
 
   return (
     <View className="p-4 mt-8 flex-1 items-center justify-center">
+      <View className="flex items-center justify-center">
+        <Title className="text-3xl">{nom}</Title>
+        <Paragraph className="text-xl">{prix}€</Paragraph>
+        <Image source={{ uri: image }} className="w-48 h-48" />
+      </View>
       <ArticleForm />
-      <Button
-        loading={isLoading}
-        className="my-4 w-40"
-        mode="contained"
-        onPress={handleUpdateArticle}
-        disabled={!canSave}
-      >
-        Ajouter
-      </Button>
+      <View className="flex flex-row gap-2">
+        <Button
+          loading={isLoadingDelete}
+          className="my-4 w-40"
+          mode="contained"
+          onPress={() => setDialog(true)}
+        >
+          Supprimer
+        </Button>
+        <Button
+          loading={isLoading}
+          className="my-4 w-40"
+          mode="contained"
+          onPress={handleUpdateArticle}
+          disabled={!canSave}
+        >
+          Mettre à jour
+        </Button>
+      </View>
       <Snackbar
         visible={snackbar !== null}
         onDismiss={() => setSnackbar(null)}
@@ -76,6 +125,20 @@ export default function UserPage() {
       >
         {snackbar}
       </Snackbar>
+      <Portal>
+        <Dialog visible={dialog} onDismiss={() => setDialog(false)}>
+          <Dialog.Title>Suppression</Dialog.Title>
+          <Dialog.Content>
+            <Text variant="bodyMedium">
+              Voulez-vous vraiment supprimer l'article "{nom}" ?
+            </Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => setDialog(false)}>Non</Button>
+            <Button onPress={handleDeleteArticle}>Oui</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </View>
   );
 }

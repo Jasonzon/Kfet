@@ -9,9 +9,9 @@ import { Select, CheckIcon } from "native-base";
 import { useState } from "react";
 
 export default function Paiements() {
-  const { isLoading } = useGetPaiementsQuery();
+  const { isLoading: isLoadingUsers } = useGetPaiementsQuery();
 
-  const paiements: PaiementJoined[] = useSelector((state: RootState) =>
+  const paiements: Paiement[] = useSelector((state: RootState) =>
     selectAllPaiements(state)
   );
 
@@ -21,7 +21,7 @@ export default function Paiements() {
 
   const [payments, setPayments] = useState<"soi" | "tous">("soi");
 
-  if (isLoading) {
+  if (isLoadingUsers) {
     return (
       <View className="flex-1 items-center justify-center ">
         <ActivityIndicator />
@@ -56,12 +56,12 @@ export default function Paiements() {
         data={
           payments === "soi"
             ? paiements.filter(
-                (paiement: PaiementJoined) => user && paiement.user === user.id
+                (paiement: Paiement) => user && paiement.user === user.id
               )
             : paiements
         }
-        keyExtractor={(item: PaiementJoined) => item.id as string}
-        renderItem={({ item, index }) => <Paiement item={item} />}
+        keyExtractor={(item: Paiement) => item.id as string}
+        renderItem={({ item }) => <Paiement item={item} />}
       />
     </View>
   );

@@ -4,17 +4,20 @@ import {
   selectAllTotalPaiements,
   useGetTotalPaiementsQuery,
 } from "./leaderboardApiSlice";
-import { Paragraph, Card, Title, ActivityIndicator } from "react-native-paper";
+import { Title, ActivityIndicator } from "react-native-paper";
 import { View, FlatList } from "react-native";
+import LeaderboardCard from "./LeaderboardCard";
+import { useGetUsersQuery } from "../users/usersApiSlice";
 
 export default function Leaderboard() {
   const { isLoading } = useGetTotalPaiementsQuery();
+  const { isLoading: isLoadingUsers } = useGetUsersQuery();
 
   const paiements: TotalPaiement[] = useSelector((state: RootState) =>
     selectAllTotalPaiements(state)
   );
 
-  if (isLoading) {
+  if (isLoading || isLoadingUsers) {
     return (
       <View className="flex-1 items-center justify-center ">
         <ActivityIndicator />
@@ -30,17 +33,7 @@ export default function Leaderboard() {
         data={paiements}
         keyExtractor={(item: TotalPaiement) => item.user as string}
         renderItem={({ item, index }) => (
-          <Card className="w-full">
-            <Card.Content>
-              <View className="flex flex-row justify-between">
-                <Title className="text-xl mb-2">{item.user}</Title>
-                <Title className="text-3xl">N°{index + 1}</Title>
-              </View>
-              <Paragraph className="text-gray-500 mb-2 text-xl">
-                {item.montant}€
-              </Paragraph>
-            </Card.Content>
-          </Card>
+          <LeaderboardCard index={index} item={item} />
         )}
       />
     </View>

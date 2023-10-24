@@ -3,8 +3,18 @@ import { apiSlice } from "../../api/apiSlice";
 import { RootState } from "../../store";
 
 export const PaiementsAdapter = createEntityAdapter({
-  selectId: (instance: PaiementJoined) => instance.id as string,
-  sortComparer: false,
+  selectId: (instance: Paiement) => instance.id as string,
+  sortComparer: (a: Paiement, b: Paiement) => {
+    if (!a.validation && !b.validation) {
+      return Date.parse(b.envoi) - Date.parse(a.envoi);
+    } else if (!a.validation) {
+      return -1;
+    } else if (!b.validation) {
+      return 1;
+    } else {
+      return Date.parse(b.envoi) - Date.parse(a.envoi);
+    }
+  },
 });
 
 export const initialState = PaiementsAdapter.getInitialState();
@@ -47,7 +57,6 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
       query: ({ paiementId }: { paiementId: string }) => ({
         url: `/paiement/${paiementId}`,
         method: "DELETE",
-        body: { paiementId },
       }),
       invalidatesTags: (result: any, error: any, arg: any) => [
         { type: "Paiement", id: arg.id },

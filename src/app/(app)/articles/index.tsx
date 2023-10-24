@@ -92,7 +92,7 @@ export default function Articles() {
       />
       <FlatList
         data={articles.filter((article: Article) =>
-          article.nom.includes(search)
+          article.nom.toLowerCase().includes(search.toLowerCase())
         )}
         numColumns={2}
         keyExtractor={(item: Article) => item.id as string}
