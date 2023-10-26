@@ -59,8 +59,8 @@ export default function BottomNavigation() {
         </Link>
         <Link href="/paiements">
           <Icon
-            source="cash-check"
-            size={30}
+            source="cash"
+            size={34}
             color={pathname === "/paiements" ? theme.colors.backdrop : "white"}
           />
         </Link>
@@ -80,16 +80,28 @@ export default function BottomNavigation() {
           <Icon source="logout" size={26} color="white" />
         </TouchableOpacity>
         <Portal>
-          <Dialog visible={dialog} onDismiss={() => setDialog(false)}>
-            <Dialog.Title>Déconnexion</Dialog.Title>
+          <Dialog
+            visible={dialog}
+            onDismiss={() => setDialog(false)}
+            style={{ borderRadius: 8 }}
+          >
+            <Dialog.Title className="font-bold">Déconnexion</Dialog.Title>
             <Dialog.Content>
-              <Text variant="bodyMedium">
+              <Text variant="bodyMedium" className="text-lg">
                 Voulez-vous vraiment vous déconnecter ?
               </Text>
             </Dialog.Content>
             <Dialog.Actions>
-              <Button onPress={() => setDialog(false)}>Non</Button>
               <Button
+                mode="contained"
+                className="w-16 rounded-lg"
+                onPress={() => setDialog(false)}
+              >
+                Non
+              </Button>
+              <Button
+                mode="contained"
+                className="w-16 rounded-lg"
                 onPress={async () => {
                   await removeToken();
                   dispatch(logOut(undefined));

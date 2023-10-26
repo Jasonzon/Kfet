@@ -2,7 +2,6 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import {
-  selectAllArticles,
   selectArticleById,
   useDeleteArticleMutation,
   useGetArticlesQuery,
@@ -17,16 +16,20 @@ import {
   Portal,
   Dialog,
   Text,
+  ActivityIndicator,
 } from "react-native-paper";
 import { useState } from "react";
 import { removeArticle, selectArticle } from "./articleFormSlice";
 import ArticleForm from "./ArticleForm";
 import { selectCurrentUser } from "../../auth/authSlice";
+import { useKeyboard } from "@react-native-community/hooks";
 
 export default function UserPage() {
   const { article: articleId } = useLocalSearchParams() as {
     article: string;
   };
+
+  const keyboard = useKeyboard();
 
   const { isLoading: isLoadingArticles } = useGetArticlesQuery();
 
@@ -36,7 +39,8 @@ export default function UserPage() {
     selectArticleById(state, articleId)
   );
 
-  const [updateArticle, { isLoading }] = useUpdateArticleMutation();
+  const [updateArticle, { isLoading: isLoadingUpdate }] =
+    useUpdateArticleMutation();
 
   const [deleteArticle, { isLoading: isLoadingDelete }] =
     useDeleteArticleMutation();
@@ -83,8 +87,16 @@ export default function UserPage() {
 
   const canSave =
     [id, prix, image, nom].every(Boolean) &&
-    !isLoading &&
+    !isLoadingUpdate &&
     /^\d+(\.\d+)?$/.test(prix);
+
+  if (isLoadingArticles) {
+    return (
+      <View className="flex-1 items-center justify-center ">
+        <ActivityIndicator />
+      </View>
+    );
+  }
 
   if (!article) {
     return (
@@ -96,31 +108,31 @@ export default function UserPage() {
 
   return (
     <View className="p-4 mt-8 flex-1 items-center justify-center">
-      <View className="flex items-center justify-center">
-        <Title className="text-3xl">{nom}</Title>
-        <Paragraph className="text-xl">{prix}€</Paragraph>
-        <Image source={{ uri: image }} className="w-48 h-48" />
-      </View>
+      <Title className="text-3xl font-bold">Mettre à jour : {nom}</Title>
       {user.role === "admin" && (
         <>
           <ArticleForm />
           <View className="flex flex-row gap-2">
             <Button
               loading={isLoadingDelete}
-              className="my-4 w-40"
+              className="my-4 w-40 rounded-lg"
               mode="contained"
               onPress={() => setDialog(true)}
             >
-              Supprimer
+              <Paragraph className="font-bold text-white w-40">
+                Supprimer
+              </Paragraph>
             </Button>
             <Button
-              loading={isLoading}
-              className="my-4 w-40"
+              loading={isLoadingUpdate}
+              className="my-4 w-40 rounded-lg"
               mode="contained"
               onPress={handleUpdateArticle}
               disabled={!canSave}
             >
-              Mettre à jour
+              <Paragraph className="font-bold text-white w-40">
+                Mettre à jour
+              </Paragraph>
             </Button>
           </View>
         </>
@@ -133,16 +145,32 @@ export default function UserPage() {
         {snackbar}
       </Snackbar>
       <Portal>
-        <Dialog visible={dialog} onDismiss={() => setDialog(false)}>
-          <Dialog.Title>Suppression</Dialog.Title>
+        <Dialog
+          visible={dialog}
+          onDismiss={() => setDialog(false)}
+          style={{ borderRadius: 8 }}
+        >
+          <Dialog.Title className="font-bold">Suppression</Dialog.Title>
           <Dialog.Content>
-            <Text variant="bodyMedium">
+            <Text variant="bodyMedium" className="text-lg">
               Voulez-vous vraiment supprimer l'article "{nom}" ?
             </Text>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={() => setDialog(false)}>Non</Button>
-            <Button onPress={handleDeleteArticle}>Oui</Button>
+            <Button
+              mode="contained"
+              className="w-16 rounded-lg"
+              onPress={() => setDialog(false)}
+            >
+              Non
+            </Button>
+            <Button
+              mode="contained"
+              className="w-16 rounded-lg"
+              onPress={handleDeleteArticle}
+            >
+              Oui
+            </Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>

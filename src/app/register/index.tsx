@@ -79,7 +79,7 @@ export default function Register() {
       />
       <Button
         loading={isLoading}
-        className="my-4 w-40"
+        className="my-4 w-40 rounded-lg"
         mode="contained"
         onPress={handleAddNewUser}
         disabled={!canSave}

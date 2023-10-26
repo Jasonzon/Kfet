@@ -83,8 +83,8 @@ export default function Home() {
         <Title className="text-3xl mb-4">La Kfet est fermée 😢</Title>
       ) : (
         <View className="flex-1 items-center justify-center">
-          <Title className="text-3xl">La Kfet est ouverte 🔥</Title>
-          <Paragraph className="text-lg">
+          <Title className="text-3xl font-bold">La Kfet est ouverte 🔥</Title>
+          <Paragraph className="text-xl">
             Membres de la team présents :
           </Paragraph>
         </View>
@@ -96,20 +96,24 @@ export default function Home() {
           ) ? (
             <Button
               loading={isLoadingPresence}
-              className="my-4 w-40"
+              className="my-4 w-40 rounded-lg"
               mode="contained"
               onPress={() => setPresence(true)}
             >
-              Je suis présent
+              <Paragraph className="font-bold text-white w-40">
+                Je suis présent
+              </Paragraph>
             </Button>
           ) : (
             <Button
               loading={isLoadingPresence2}
-              className="my-4 w-40"
+              className="my-4 w-40 rounded-lg"
               mode="contained"
               onPress={() => setPresence2(true)}
             >
-              Je pars
+              <Paragraph className="font-bold text-white w-40">
+                Je pars
+              </Paragraph>
             </Button>
           )}
         </>
@@ -123,26 +127,60 @@ export default function Home() {
         />
       )}
       <Portal>
-        <Dialog visible={presence} onDismiss={() => setPresence(false)}>
-          <Dialog.Title>Présence à la Kfet</Dialog.Title>
+        <Dialog
+          visible={presence}
+          onDismiss={() => setPresence(false)}
+          style={{ borderRadius: 8 }}
+        >
+          <Dialog.Title className="font-bold">Présence à la Kfet</Dialog.Title>
           <Dialog.Content>
-            <Text variant="bodyMedium">
+            <Text variant="bodyMedium" className="text-lg">
               Vous êtes vraiment présent à la Kfet ?
             </Text>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={() => setPresence(false)}>Non</Button>
-            <Button onPress={handleAddNewPresence}>Oui</Button>
+            <Button
+              mode="contained"
+              className="w-16 rounded-lg"
+              onPress={() => setPresence(false)}
+            >
+              Non
+            </Button>
+            <Button
+              mode="contained"
+              className="w-16 rounded-lg"
+              onPress={handleAddNewPresence}
+            >
+              Oui
+            </Button>
           </Dialog.Actions>
         </Dialog>
-        <Dialog visible={presence2} onDismiss={() => setPresence2(false)}>
-          <Dialog.Title>Présence à la Kfet</Dialog.Title>
+        <Dialog
+          visible={presence2}
+          onDismiss={() => setPresence2(false)}
+          style={{ borderRadius: 8 }}
+        >
+          <Dialog.Title className="font-bold">Présence à la Kfet</Dialog.Title>
           <Dialog.Content>
-            <Text variant="bodyMedium">Vous partez vraiment de la Kfet ?</Text>
+            <Text variant="bodyMedium" className="text-lg">
+              Vous partez vraiment de la Kfet ?
+            </Text>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={() => setPresence2(false)}>Non</Button>
-            <Button onPress={handleUpdatePresence}>Oui</Button>
+            <Button
+              mode="contained"
+              className="w-16 rounded-lg"
+              onPress={() => setPresence2(false)}
+            >
+              Non
+            </Button>
+            <Button
+              mode="contained"
+              className="w-16 rounded-lg"
+              onPress={handleUpdatePresence}
+            >
+              Oui
+            </Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>

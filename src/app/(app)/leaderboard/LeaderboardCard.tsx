@@ -41,12 +41,12 @@ export default function LeaderboardCard({ item, index }: LeaderboardProps) {
     <Card className={`w-full ${background(index)}`}>
       <Card.Content>
         <View className="flex flex-row justify-between">
-          <Title className="text-xl">{`${user.prenom} ${user.nom
+          <Title className="text-xl font-bold">{`${user.prenom} ${user.nom
             .slice(0, 1)
             .toUpperCase()}.`}</Title>
           <Title className="text-3xl">N°{index + 1}</Title>
         </View>
-        <Paragraph className="text-gray-500 text-xl">{item.total}€</Paragraph>
+        <Paragraph className="text-xl text-gray-800">{item.total}€</Paragraph>
       </Card.Content>
     </Card>
   );

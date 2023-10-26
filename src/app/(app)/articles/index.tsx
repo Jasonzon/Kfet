@@ -7,9 +7,10 @@ import {
   Button,
   ActivityIndicator,
   Paragraph,
-  useTheme,
   TextInput,
   Snackbar,
+  IconButton,
+  useTheme,
 } from "react-native-paper";
 import { selectCurrentUser } from "../../auth/authSlice";
 import { router } from "expo-router";
@@ -33,8 +34,6 @@ export default function Articles() {
   const cartList = cart.map((article: Article) => article.id);
 
   const montant = cart.reduce((acc, article) => acc + article.prix, 0);
-
-  const theme = useTheme();
 
   const [search, setSearch] = useState<string>("");
 
@@ -60,6 +59,8 @@ export default function Articles() {
 
   const dispatch = useDispatch();
 
+  const theme = useTheme();
+
   if (isLoading) {
     return (
       <View className="flex-1 items-center justify-center ">
@@ -69,26 +70,26 @@ export default function Articles() {
   }
 
   return (
-    <View className="flex-1 items-center justify-center p-4 mt-4">
-      <Title className="text-3xl mb-2">Tous les articles</Title>
+    <View className="flex-1 items-center justify-center p-4 mt-4 relative">
+      <Title className="text-3xl mb-4 font-bold">Articles</Title>
       {user?.role === "admin" && (
-        <Button
-          loading={isLoading}
-          className="w-40 mb-4"
-          mode="contained"
+        <IconButton
+          icon="plus"
+          size={30}
+          className="absolute top-2 right-2 rounded-lg"
+          iconColor="white"
+          style={{ backgroundColor: theme.colors.primary }}
           onPress={() => {
             dispatch(removeArticle(undefined));
             router.push("/articles/new");
           }}
-        >
-          Ajouter un article
-        </Button>
+        />
       )}
       <TextInput
         value={search}
         onChangeText={setSearch}
         placeholder="Rechercher"
-        className="bg-white border rounded-md px-4 py-2 mb-4 w-80"
+        className="bg-white border rounded-md px-4 py-0.5 mb-2 w-80"
       />
       <FlatList
         data={articles.filter((article: Article) =>
@@ -98,17 +99,15 @@ export default function Articles() {
         keyExtractor={(item: Article) => item.id as string}
         renderItem={({ item }) => <Article item={item} />}
       />
-      <View className="absolute bottom-4 p-2 flex flex-row gap-2">
+      <View className="absolute bottom-2 flex-row gap-2 flex-1 -translate-x-1">
         <Button
           mode="contained"
           onPress={() => dispatch(removeCart(undefined))}
+          className="rounded-lg"
         >
-          Réinitialiser
+          <Paragraph className="font-bold text-white">Réinitialiser</Paragraph>
         </Button>
-        <Paragraph
-          className="p-2 rounded-md"
-          style={{ backgroundColor: theme.colors.inversePrimary }}
-        >
+        <Paragraph className="font-bold text-lg translate-y-1.5">
           Total: {montant.toFixed(2)}€
         </Paragraph>
         <Button
@@ -116,8 +115,9 @@ export default function Articles() {
           mode="contained"
           onPress={handleAddPaiement}
           disabled={montant === 0}
+          className="rounded-lg"
         >
-          Commander
+          <Paragraph className="font-bold text-white">Commander</Paragraph>
         </Button>
       </View>
       <Snackbar

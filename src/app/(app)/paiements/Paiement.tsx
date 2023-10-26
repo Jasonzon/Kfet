@@ -44,7 +44,7 @@ export default function Paiement({ item }: PaiementProps) {
       }}
     >
       <View className="mb-2 flex flex-row justify-between">
-        <Title className="text-xl">{`${user.prenom} ${user.nom.slice(
+        <Title className="text-xl font-bold">{`${user.prenom} ${user.nom.slice(
           0,
           1
         )}.`}</Title>

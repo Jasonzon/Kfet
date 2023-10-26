@@ -81,9 +81,9 @@ export default function PaiementInfos({ paiement }: PaiementInfosProps) {
         keyExtractor={(item: string, index: number) => index.toString()}
         renderItem={({ item }) => <Article item={item} />}
       />
-      <View className="flex flex-column items-center justify-evenly">
+      <View className="flex flex-column items-center justify-evenly mb-2">
         <Paragraph className="text-xl">
-          Envoyé : {"  "}
+          Envoyé le{" "}
           {new Intl.DateTimeFormat("fr-FR", {
             day: "2-digit",
             month: "2-digit",
@@ -94,7 +94,7 @@ export default function PaiementInfos({ paiement }: PaiementInfosProps) {
         </Paragraph>
         {paiement.validation && (
           <Paragraph className="text-xl">
-            Validé : {"  "}
+            Validé le{" "}
             {new Intl.DateTimeFormat("fr-FR", {
               day: "2-digit",
               month: "2-digit",
@@ -110,7 +110,7 @@ export default function PaiementInfos({ paiement }: PaiementInfosProps) {
           {currentUser.id === user.id && (
             <Button
               loading={isLoadingDelete}
-              className="my-4 w-40"
+              className="my-4 w-40 rounded-lg"
               mode="contained"
               onPress={() => setDialogDelete(true)}
             >
@@ -120,7 +120,7 @@ export default function PaiementInfos({ paiement }: PaiementInfosProps) {
           {currentUser.role === "admin" && (
             <Button
               loading={isLoadingUpdate}
-              className="my-4 w-40"
+              className="my-4 w-40 rounded-lg"
               mode="contained"
               onPress={() => setDialogUpdate(true)}
             >
@@ -129,30 +129,61 @@ export default function PaiementInfos({ paiement }: PaiementInfosProps) {
           )}
         </View>
       )}
-
       <Portal>
-        <Dialog visible={dialogDelete} onDismiss={() => setDialogDelete(false)}>
-          <Dialog.Title>Suppression</Dialog.Title>
+        <Dialog
+          visible={dialogDelete}
+          onDismiss={() => setDialogDelete(false)}
+          style={{ borderRadius: 8 }}
+        >
+          <Dialog.Title className="font-bold">Suppression</Dialog.Title>
           <Dialog.Content>
-            <Text variant="bodyMedium">
+            <Text variant="bodyMedium" className="text-lg">
               Voulez-vous vraiment supprimer la commande ?
             </Text>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={() => setDialogDelete(false)}>Non</Button>
-            <Button onPress={handleDeletePaiement}>Oui</Button>
+            <Button
+              mode="contained"
+              className="w-16 rounded-lg"
+              onPress={() => setDialogDelete(false)}
+            >
+              Non
+            </Button>
+            <Button
+              mode="contained"
+              className="w-16 rounded-lg"
+              onPress={handleDeletePaiement}
+            >
+              Oui
+            </Button>
           </Dialog.Actions>
         </Dialog>
-        <Dialog visible={dialogUpdate} onDismiss={() => setDialogUpdate(false)}>
-          <Dialog.Title>Validation</Dialog.Title>
+        <Dialog
+          visible={dialogUpdate}
+          onDismiss={() => setDialogUpdate(false)}
+          style={{ borderRadius: 8 }}
+        >
+          <Dialog.Title className="font-bold">Validation</Dialog.Title>
           <Dialog.Content>
-            <Text variant="bodyMedium">
+            <Text variant="bodyMedium" className="text-lg">
               Voulez-vous vraiment valider le paiement ?
             </Text>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={() => setDialogUpdate(false)}>Non</Button>
-            <Button onPress={handleUpdatePaiement}>Oui</Button>
+            <Button
+              mode="contained"
+              className="w-16 rounded-lg"
+              onPress={() => setDialogUpdate(false)}
+            >
+              Non
+            </Button>
+            <Button
+              mode="contained"
+              className="w-16 rounded-lg"
+              onPress={handleUpdatePaiement}
+            >
+              Oui
+            </Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>

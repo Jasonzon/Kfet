@@ -36,12 +36,12 @@ export default function Admin() {
 
   return (
     <View className="flex-1 items-center justify-center p-4 mt-4">
-      <Title className="text-3xl mb-2">Tous les utilisateurs</Title>
+      <Title className="text-3xl mb-2 font-bold">Utilisateurs</Title>
       <TextInput
         value={search}
         onChangeText={setSearch}
         placeholder="Rechercher"
-        className="bg-white border rounded-md px-4 py-2 mb-2 w-80"
+        className="bg-white border rounded-md px-4 py-0.5 mb-3 w-80"
       />
       <FlatList
         data={users.filter(
@@ -62,10 +62,10 @@ export default function Admin() {
             }}
             onPress={() => router.push(`/users/${item.id}`)}
           >
-            <Title className="text-xl">{`${
+            <Title className="text-xl font-bold">{`${
               item.prenom
             } ${item.nom[0].toUpperCase()}.`}</Title>
-            <Paragraph className="text-gray-500">{item.tel}</Paragraph>
+            <Paragraph className="text-gray-500 mt-2">{item.tel}</Paragraph>
           </TouchableOpacity>
         )}
       />

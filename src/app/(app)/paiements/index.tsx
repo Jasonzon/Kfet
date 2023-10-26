@@ -31,7 +31,7 @@ export default function Paiements() {
 
   return (
     <View className="flex-1 items-center justify-center p-4 mt-4">
-      <Title className="text-3xl mb-4">Paiements</Title>
+      <Title className="text-3xl mb-2 font-bold">Commandes 💸</Title>
       {user?.role === "admin" && (
         <Select
           selectedValue={payments}
@@ -47,8 +47,8 @@ export default function Paiements() {
             setPayments(itemValue as "soi" | "tous")
           }
         >
-          <Select.Item label={"Vos paiements"} value={"soi"} />
-          <Select.Item label={"Tous les paiements"} value={"tous"} />
+          <Select.Item label={"Vos commandes"} value={"soi"} />
+          <Select.Item label={"Toutes les commandes"} value={"tous"} />
         </Select>
       )}
       <FlatList

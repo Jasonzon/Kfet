@@ -12,6 +12,7 @@ import {
   Button,
   Snackbar,
   ActivityIndicator,
+  useTheme,
 } from "react-native-paper";
 import { useState } from "react";
 import { selectCurrentUser } from "../../auth/authSlice";
@@ -43,6 +44,8 @@ export default function UserPage() {
     }
   }
 
+  const theme = useTheme();
+
   if (isLoadingUsers) {
     return (
       <View className="flex-1 items-center justify-center ">
@@ -65,6 +68,13 @@ export default function UserPage() {
         {user.prenom} {user.nom}
       </Paragraph>
       <Paragraph className="text-xl font-bold mb-4">{user.mail}</Paragraph>
+      <Paragraph className="text-xl font-bold mb-2">{user.tel}</Paragraph>
+      <Paragraph
+        className="text-xl font-bold text-white p-2 rounded-lg"
+        style={{ backgroundColor: theme.colors.inversePrimary }}
+      >
+        {user.role === "admin" ? "Team Kfet" : "Client"}
+      </Paragraph>
       {currentUser?.id !== user.id && (
         <>
           {user.role === "admin" ? (
@@ -85,7 +95,7 @@ export default function UserPage() {
             >
               Ajouter à la team Kfet
             </Button>
-          )}{" "}
+          )}
         </>
       )}
       <Snackbar

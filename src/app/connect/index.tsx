@@ -51,7 +51,7 @@ export default function Connect() {
       />
       <Button
         loading={isLoading}
-        className="my-4 w-40"
+        className="my-4 w-40 rounded-lg"
         mode="contained"
         onPress={onLogin}
         disabled={!canSave}
